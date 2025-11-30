@@ -1,6 +1,5 @@
 node_modules
 # Keep environment variables out of version control
-.env
 dist
 
 /src/generated/prisma
@@ -8,3 +7,4 @@ dist
 /src/generated/prisma
 .vercel
 .env*.local
+config.bat

@@ -199,7 +199,6 @@ npm run dev
 
 | Method | Route | Description |
 | ------------- | ------------- | ------------- |
-| POST | /payment/create-intent | Create Stripe paymentIntent |
 | POST | /webhook | Stripe webhook |
 
 ### 🤖 Chatbot

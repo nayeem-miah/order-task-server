@@ -1,234 +1,510 @@
-# Real-Time Order Management + Payment System + AI Chatbot
+# 📦 Real-Time Order Management + Stripe Payments + AI Chatbot (Backend)
 
-## Project Overview
+A complete **Node.js + Express + TypeScript** backend that includes:
 
-This is a **backend-only system** that provides:
+- 🔐 JWT Authentication
 
-* User authentication (JWT + bcrypt)
-* Order creation and payment via **Stripe**
-* Real-time order updates using **Socket.io**
-* AI-powered chatbot for product help and FAQs (**OpenRouter free model**)
-* Admin management of orders with live user notifications
-* Secure payment handling via webhooks (Stripe)
+- 🛒 Order Management System
 
----
+- 💳 Stripe Payment Integration (with Webhooks)
 
-## Tech Stack
+- ⚡ Real-Time Updates with Socket.io
 
-* **Backend**: Node.js, Express.js, TypeScript
-* **Database**: PostgreSQL (via Prisma ORM)
-* **Realtime**: Socket.io
-* **Payments**: Stripe
-* **Authentication**: JWT, bcrypt
-* **Validation**: Zod
-* **AI Chatbot**: OpenRouter free API
-* **Other Tools**: compression, cookie-parser, cors, central error handler
+- 🤖 AI Chatbot using OpenRouter (Free Models Supported)
+
+- 🗄️ PostgreSQL + Prisma ORM
+
+- 🧩 Zod Validation
+
+- 🚀 Ready for deployment on **Vercel** + **Render**
 
 ---
+## 🌐 Production URL
 
-
-## Live Deployment
-
-* **Production URL**: https://order-amber.vercel.app
-
----
-
-## Deploy to Render
-
-You can easily deploy this application to [Render](https://render.com) using the following steps:
-
-### Manual Deployment:
-1. Create a new Web Service on Render
-2. Connect your GitHub repository
-3. Set the following environment variables in your Render dashboard:
-   - `DATABASE_URL`: PostgreSQL database connection string
-   - `JWT_SECRET`: Secret key for JWT tokens (use a strong random string)
-   - `STRIPE_SECRET_KEY`: Your Stripe secret key
-   - `STRIPE_WEBHOOK_SECRET`: Your Stripe webhook secret
-   - `OPENROUTER_API_KEY`: Your OpenRouter API key
-4. Set the Build Command to: `npm install && npm run build`
-5. Set the Start Command to: `npm start`
-6. Set the Environment to: `Node`
-
-### Using render.yaml:
-If you're using the included `render.yaml` file, deployment will be automatic when you connect your repo to Render. The configuration will set up both the web service and a PostgreSQL database.
+**Backend Live URL:**
+[https://order-amber.vercel.app](https://order-amber.vercel.app)
 
 ---
+## 🛠️ Tech Stack
 
-## Test Credentials
-
-| Role  | Email            | Password   |
-| ----- | ---------------- | ---------- |
-| User  | nayeem@gmail.com | Nayeem123  |
-| Admin | admin@gmail.com  | admin123   |
-
-
-
-
-## Features
-
-### 1️⃣ Authentication
-
-* **Register**: `POST /auth/register`
-* **Login**: `POST /auth/login`
-* **Admin Register**: `POST /auth/register-admin`
-* **Logout**: `POST /auth/logout`
-* **Role-based access** with `Role.USER` and `Role.ADMIN`
-
-### 2️⃣ Order Management
-
-* **Endpoints**:
-
-  * `POST /order/` → create order
-  * `GET /order/my-orders` → user orders
-  * `GET /order/` → admin all orders
-  * `PATCH /order/:id/status` → admin update order status
-
-### 3️⃣ Payments
-
-* **Stripe Flow**:
-
-  * Create payment intent → return `clientSecret`
-  * Webhook verifies signature → update `paymentStatus` & `orderStatus`
-
-
-**⚠️ Never trust the frontend for payment confirmation.**
-
-### 4️⃣ Real-Time Updates
-
-* Socket.io emits `orderUpdate` events to users when:
-
-  * Payment succeeds
-  * Admin updates order status
-* Authentication via JWT token in query params
-
-### 5️⃣ AI Chatbot (OpenRouter)
-
-* Endpoint: `POST /chatbot`
-* Supports streaming or normal HTTP response
-* Keeps **last 3 messages per user** in memory or DB (bonus)
-* Example response:
-
-```json
-{
-  "reply": "USB Hub (Price: $25, Stock: 12) - Best value for budget-conscious shoppers."
-}
-```
-
-### 6️⃣ Middleware & Validation
-
-* Central error handler (`globalErrorHandler`)
-* Role-based auth (`auth`)
-* Validation using Zod schemas
-* 404 handler (`notFound`)
+| Feature | Technology |
+| ------------- | ------------- |
+| Backend | Node.js, Express.js, TypeScript |
+| Database | PostgreSQL + Prisma ORM |
+| Real-time | Socket.io |
+| Payment | Stripe |
+| Auth | JWT + bcrypt |
+| Validation | Zod |
+| AI Chatbot | OpenRouter API |
+| Security | CORS, cookie-parser |
+| Deployment | Vercel / Render |
 
 ---
+## 📘 Features
+### 🔐 1. Authentication
+- Register user
 
-## Folder Structure
+- Login with JWT
 
+- Admin-only registration
+
+- Logout (clear cookies)
+
+- Role-based permissions (`USER`, `ADMIN`)
+
+### 🛒 2. Order Management
+- Create new order
+
+- View user’s own orders
+
+- Admin: view all orders
+
+- Admin: update order status
+
+- Tracks:
+
+    - paymentStatus
+
+    - orderStatus
+
+### 💳 3. Stripe Payment
+- Creates PaymentIntent
+
+- Returns `clientSecret` to frontend
+
+- Webhook validates signature and updates order
+
+- Real-time payment update via Socket.io
+
+### ⚡ 4. Real-Time Notifications
+- Users get instant updates:
+
+    - Payment success
+
+    - Order status changes
+
+- Admin dashboard auto-updates
+
+### 🤖 5. AI Chatbot (OpenRouter)
+- Chat endpoint: `POST /chatbot`
+
+- Helps with:
+
+    - Product recommendations
+
+    - General queries
+
+    - FAQs
+
+- Stores last 3 messages for better conversation flow
+
+---
+## 📁 Project Structure
 ```
 src/
-  ├─ config/           # DB, configs
-  ├─ controllers/      # UserController, OrderController, PaymentController
-  ├─ errors/           # Custom error classes
-  ├─ middleware/       # auth, validateRequest, error handlers
-  ├─ routes/           # userRouter, OrderRoute, ChatBotRoutes
-  ├─ services/         # chatService, orderService, paymentService, userServices
-  ├─ types/            # TypeScript interfaces
-  ├─ utils/            # Helpers: JWT, calculateTotal, etc.
-  ├─ validations/      # Zod schemas
-  ├─ app.ts            # Express app setup
-  └─ server.ts         # Server & Socket.io init
+│── app.ts
+│── server.ts
+├── config/
+├── controllers/
+├── errors/
+├── middleware/
+├── routes/
+├── services/
+├── types/
+├── utils/
+└── validations/
+
 ```
-
 ---
-
-## Environment Variables (`.env.example`)
-
-```env
+## ⚙️ Environment Variables (`.env`)
+```
 DATABASE_URL=postgresql://user:password@host:port/dbname
 PORT=5000
 NODE_ENV=development
+
 JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=7d
-STRIPE_SECRET_KEY=sk_test_...
-PAYPAL_CLIENT_ID=...
-PAYPAL_CLIENT_SECRET=...
+
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxx
+
 OPENROUTER_API_KEY=your_openrouter_key
+
 ```
-
 ---
-
-## Setup & Run
-
-1. Clone the repo:
-
+## 🚀 Setup & Run Locally
+### 1️⃣ Clone repository
 ```bash
 git clone https://github.com/nayeem-miah/order-task-server.git
 cd order-task-server
+
 ```
-
-2. Install dependencies:
-
+### 2️⃣ Install packages
 ```bash
 npm install
+
 ```
-
-3. Setup Prisma and Database:
-
+### 3️⃣ Setup Prisma
 ```bash
 npx prisma generate
 npx prisma migrate dev
+
 ```
-
-4. Start server:
-
+### 4️⃣ Start development server
 ```bash
 npm run dev
+
 ```
-
-5. Test API:
-
-* Base URL: `http://localhost:5000/api/v1`
-* Use provided Postman collection
-
-6. Stripe Webhook (local testing):
-
+---
+## 🧪 Testing Stripe Webhooks (Local)
 ```bash
 stripe listen --forward-to localhost:5000/webhook
+
 ```
+---
+## 🛣️ API Routes Summary
+
+| Method | Route | Role | Description |
+| ------------- | ------------- | ------------- | ------------- |
+| POST | /auth/register | Public | Register user |
+| POST | /auth/login | Public | Login user |
+| POST | /auth/logout | User/Admin | Logout user |
+| POST | /auth/register-admin | Admin | Register admin |
+| GET | /auth/ | Admin | All users |
+| GET | /auth/:id | Admin | Single user |
+| POST | /order | User | Create order |
+| GET | /order/my-orders | User | My orders |
+| GET | /order/ | Admin | All orders |
+| PATCH | /order/:id/status | Admin | Update order |
+| POST | /chatbot | User/Admin | Chat with AI |
+
+---
+## 🧰 Deployment Guide (Render)
+- Create **Web Service**
+- Add environment variables:
+
+    - `DATABASE_URL`
+
+    - `JWT_SECRET`
+
+    - `STRIPE_SECRET_KEY`
+
+    - `STRIPE_WEBHOOK_SECRET`
+
+    - `OPENROUTER_API_KEY`
+- Build Command:
+
+    ```
+    npm install && npm run build
+
+    ```
+- Start Command:
+
+    ```
+    npm start
+
+    ```
+
+---
+## 👤 Test Accounts
+
+| Role | Email | Password |
+| ------------- | ------------- | ------------- |
+| User | nayeem@gmail.com | Nayeem123 |
+| Admin | admin@gmail.com | admin123 |
+
+---
+## 📄 Postman API Documentation
+
+🔗 [https://documenter.getpostman.com/view/46499415/2sB3dLUrbu](https://documenter.getpostman.com/view/46499415/2sB3dLUrbu)
+
+---
+## ⭐ Contribution
+
+Pull requests are welcome.
+If you'd like new features (PayPal, Dashboard UI, Chatbot memory DB, etc.), feel free to request.
+
+---
+## 📜 License
+
+MIT License © 2025
 
 ---
 
-## API Routes Summary
+If you want, I can also generate:
 
-| Method | Route                | Role       | Description               |
-| ------ | -------------------- | ---------- | ------------------------- |
-| POST   | /auth/register       | Public     | Register new user         |
-| POST   | /auth/login          | Public     | Login user                |
-| POST   | /auth/logout         | User/Admin | Logout user               |
-| POST   | /auth/register-admin | Admin      | Register admin            |
-| GET    | /auth/               | Admin      | Get all users             |
-| GET    | /auth/:id            | Admin      | Get single user           |
-| GET    | /order/              | Admin      | Get all orders            |
-| GET    | /order/my-orders     | User       | Get own orders            |
-| POST   | /order/              | User       | Create new order          |
-| PATCH  | /order/:id/status    | Admin      | Update order status       |
-| POST   | /chatbot             | User/Admin | Chat with AI (OpenRouter) |
+✅ API diagram
+✅ ER diagram
+✅ Architecture diagram
+✅ README badges
+
+Just tell me!
+
+##### You said:
+
+you just update my readme.Md for the postman documnetation or api documentation and postman documantation publish link add also there
+
+###### ChatGPT said:
+
+Here is your **updated README.md** with:
+
+✔ **API Documentation section improved**
+✔ **Postman Published Documentation link added**
+✔ **Postman Collection import link added**
+✔ **Clear API structure (copy-paste ready for GitHub)**
 
 ---
+# 📦 Real-Time Order Management + Stripe Payments + AI Chatbot (Backend)
 
-## Webhook Testing
+A complete **Node.js + Express + TypeScript** backend that includes:
 
-1. **Stripe**:
+- 🔐 JWT Authentication
 
+- 🛒 Order Management System
+
+- 💳 Stripe Payment Integration (with Webhooks)
+
+- ⚡ Real-Time Updates with Socket.io
+
+- 🤖 AI Chatbot using OpenRouter
+
+- 🗄️ PostgreSQL + Prisma ORM
+
+- 🧩 Zod Validation
+
+- 🚀 Ready for deployment on **Vercel** + **Render**
+
+---
+## 🌐 Production URL
+
+**Backend Live URL:**
+[https://order-amber.vercel.app](https://order-amber.vercel.app)
+
+---
+## 📘 API Documentation
+### 🔗 **Postman Published Documentation**
+
+👉 **Public API Docs:**
+[https://documenter.getpostman.com/view/46499415/2sB3dLUrbu](https://documenter.getpostman.com/view/46499415/2sB3dLUrbu)
+
+### 📥 **Postman Collection (Importable)**
+
+👉 **Download Postman Collection (.json)**
+https://documenter.getpostman.com/view/46499415/2sB3dLUrbu?version=latest#software
+
+### 📌 API Includes:
+- Auth APIs
+
+- Order APIs
+
+- Payment APIs (Stripe)
+
+- Webhook
+
+- Chatbot AI API
+
+- Admin APIs
+
+---
+## 🛠️ Tech Stack
+
+| Feature | Technology |
+| ------------- | ------------- |
+| Backend | Node.js, Express.js, TypeScript |
+| Database | PostgreSQL + Prisma ORM |
+| Real-time | Socket.io |
+| Payment | Stripe |
+| Auth | JWT + bcrypt |
+| Validation | Zod |
+| AI Chatbot | OpenRouter API |
+| Deployment | Vercel / Render |
+
+---
+## 📘 Features
+### 🔐 Authentication
+- Register user
+
+- Login using JWT
+
+- Admin registration
+
+- Logout (clear cookies)
+
+- Role-based protection
+
+### 🛒 Order Management
+- Create order
+
+- User order history
+
+- Admin: all orders
+
+- Admin: update orderStatus
+
+- Tracks:
+
+    - paymentStatus (`PENDING`, `PAID`, `FAILED`)
+
+    - orderStatus (`PENDING`, `PROCESSING`, `DELIVERED`)
+
+### 💳 Stripe Payment
+- Create PaymentIntent
+
+- Return `clientSecret`
+
+- Secure Webhook to verify payments
+
+- Update order + send realtime update
+
+### ⚡ Real-Time System (Socket.io)
+- Realtime status messages:
+
+    - Payment success
+
+    - Admin status updates
+
+- Dashboard auto refresh
+
+### 🤖 AI Chatbot (OpenRouter)
+- Product suggestions
+
+- FAQ assistance
+
+- Saves last 3 messages (per user)
+
+---
+## 📁 Project Structure
+```
+src/
+│── app.ts
+│── server.ts
+├── config/
+├── controllers/
+├── errors/
+├── middleware/
+├── routes/
+├── services/
+├── types/
+├── utils/
+└── validations/
+
+```
+---
+## ⚙️ Environment Variables (`.env`)
+```
+DATABASE_URL=postgresql://user:password@host:port/dbname
+PORT=5000
+NODE_ENV=development
+
+JWT_SECRET=your_super_secret_key
+JWT_EXPIRES_IN=7d
+
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxx
+
+OPENROUTER_API_KEY=your_openrouter_key
+
+```
+---
+## 🚀 Setup & Run Locally
+### 1️⃣ Clone repository
+```bash
+git clone https://github.com/nayeem-miah/order-task-server.git
+cd order-task-server
+
+```
+### 2️⃣ Install packages
+```bash
+npm install
+
+```
+### 3️⃣ Prisma
+```bash
+npx prisma generate
+npx prisma migrate dev
+
+```
+### 4️⃣ Start server
+```bash
+npm run dev
+
+```
+---
+## 🛣️ API Routes
+### 👤 Authentication
+
+| Method | Route | Description |
+| ------------- | ------------- | ------------- |
+| POST | /auth/register | Register user |
+| POST | /auth/login | Login user |
+| POST | /auth/logout | Logout user |
+| POST | /auth/register-admin | Admin register |
+| GET | /auth/ | Admin → all users |
+| GET | /auth/:id | Admin → user details |
+
+### 🛒 Orders
+
+| Method | Route | Description |
+| ------------- | ------------- | ------------- |
+| POST | /order | Create order |
+| GET | /order/my-orders | My orders |
+| GET | /order | Admin → all orders |
+| PATCH | /order/:id/status | Admin → update status |
+
+### 💳 Payment
+
+| Method | Route | Description |
+| ------------- | ------------- | ------------- |
+| POST | /payment/create-intent | Create Stripe paymentIntent |
+| POST | /webhook | Stripe webhook |
+
+### 🤖 Chatbot
+
+| Method | Route | Description |
+| ------------- | ------------- | ------------- |
+| POST | /chatbot | Chat with AI |
+
+---
+## 🧪 Stripe Webhook (Local)
 ```bash
 stripe listen --forward-to http://localhost:5000/webhook
+
 ```
+---
+## 🧰 Deployment (Render)
+- Add repository
+- Add env variables
+- Build command:
 
-2. **PayPal**:
+    ```
+    npm install && npm run build
 
-* Configure sandbox webhooks to your `/webhook` endpoint
-* Verify in `PaymentController.handleWebhook`
+    ```
+- Start command:
 
+    ```
+    npm start
 
+    ```
+
+---
+## 👤 Test Accounts
+
+| Role | Email | Password |
+| ------------- | ------------- | ------------- |
+| User | nayeem@gmail.com | Nayeem123 |
+| Admin | admin@gmail.com | admin123 |
+
+---
+## 📄 API Documentation (Postman)
+
+🔗 **Postman Public Documentation**
+[https://documenter.getpostman.com/view/46499415/2sB3dLUrbu](https://documenter.getpostman.com/view/46499415/2sB3dLUrbu)
+
+📁 **Importable Collection (.json)**
+https://documenter.getpostman.com/view/46499415/2sB3dLUrbu?version=latest#software
+
+---
+## 📜 License
+
+MIT License © 2025

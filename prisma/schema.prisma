@@ -4,34 +4,37 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
 }
 
-
-
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  name      String?
-  role      Role      @default(USER)
-  orders    Order[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  name         String?
+  role         Role          @default(USER)
+  orders       Order[]
+  chatMessages ChatMessage[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  user          User        @relation(fields: [userId], references: [id])
+  id            String        @id @default(uuid())
+  user          User          @relation(fields: [userId], references: [id])
   userId        String
-  items         Json
+  items         Json          // Array of { title, price, quantity }
   totalAmount   Float
   paymentMethod PaymentMethod @default(STRIPE)
   paymentStatus PaymentStatus @default(PENDING)
   orderStatus   OrderStatus   @default(PENDING)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  
+  // Payment tracking
+  stripePaymentIntentId String?
+  paypalOrderId         String?
+  
   chatMessages  ChatMessage[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model ChatMessage {
@@ -39,7 +42,8 @@ model ChatMessage {
   order     Order?   @relation(fields: [orderId], references: [id])
   orderId   String?
   userId    String?
-  role      String
+  user      User?    @relation(fields: [userId], references: [id])
+  role      String   // "user" or "assistant"
   message   String
   createdAt DateTime @default(now())
 }

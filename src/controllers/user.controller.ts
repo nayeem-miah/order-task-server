@@ -42,7 +42,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
         success: true,
         statusCode: 200,
         message: "Patient login successfully",
-        data: accessToken
+        data: {accessToken}
     })
 })
 

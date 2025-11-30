@@ -10,7 +10,6 @@ const auth = (...roles: string[]) => {
     return async (req: Request & { user?: any }, res: Response, next: NextFunction) => {
         try {
             const token = req.cookies.accessToken;
-            console.log({token})
 
             if (!token) {
                 throw createError(401, "Authentication required");

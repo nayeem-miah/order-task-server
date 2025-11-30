@@ -236,7 +236,7 @@ stripe listen --forward-to http://localhost:5000/webhook
 
 | Role | Email | Password |
 | ------------- | ------------- | ------------- |
-| User | nayeem@gmail.com | Nayeem123 |
+| User | nyeem@gmail.com | Nayeem123 |
 | Admin | admin@gmail.com | admin123 |
 
 ---

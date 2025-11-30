@@ -18,13 +18,52 @@ This is a **backend-only system** that provides:
 * **Backend**: Node.js, Express.js, TypeScript
 * **Database**: PostgreSQL (via Prisma ORM)
 * **Realtime**: Socket.io
-* **Payments**: Stripe 
+* **Payments**: Stripe
 * **Authentication**: JWT, bcrypt
 * **Validation**: Zod
 * **AI Chatbot**: OpenRouter free API
 * **Other Tools**: compression, cookie-parser, cors, central error handler
 
 ---
+
+
+## Live Deployment
+
+* **Production URL**: https://order-amber.vercel.app
+
+---
+
+## Deploy to Render
+
+You can easily deploy this application to [Render](https://render.com) using the following steps:
+
+### Manual Deployment:
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Set the following environment variables in your Render dashboard:
+   - `DATABASE_URL`: PostgreSQL database connection string
+   - `JWT_SECRET`: Secret key for JWT tokens (use a strong random string)
+   - `STRIPE_SECRET_KEY`: Your Stripe secret key
+   - `STRIPE_WEBHOOK_SECRET`: Your Stripe webhook secret
+   - `OPENROUTER_API_KEY`: Your OpenRouter API key
+4. Set the Build Command to: `npm install && npm run build`
+5. Set the Start Command to: `npm start`
+6. Set the Environment to: `Node`
+
+### Using render.yaml:
+If you're using the included `render.yaml` file, deployment will be automatic when you connect your repo to Render. The configuration will set up both the web service and a PostgreSQL database.
+
+---
+
+## Test Credentials
+
+| Role  | Email            | Password   |
+| ----- | ---------------- | ---------- |
+| User  | nayeem@gmail.com | Nayeem123  |
+| Admin | admin@gmail.com  | admin123   |
+
+
+
 
 ## Features
 

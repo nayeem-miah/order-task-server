@@ -16,13 +16,13 @@ A complete **Node.js + Express + TypeScript** backend that includes:
 
 - 🧩 Zod Validation
 
-- 🚀 Ready for deployment on **Vercel** + **Render**
+- 🚀 Ready for deployment on **Render**
 
 ---
 ## 🌐 Production URL
 
 **Backend Live URL:**
-[https://order-amber.vercel.app](https://order-amber.vercel.app)
+[Order Management](https://order-task-server.onrender.com/)
 
 ---
 ## 📘 API Documentation

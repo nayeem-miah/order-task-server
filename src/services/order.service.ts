@@ -3,6 +3,7 @@ import { calculateTotal } from "../utils/calculateTotal";
 import { prisma } from "../config/prisma";
 import { stripe } from "../utils/stripe";
 import config from "../config";
+import { PaginatedOrders } from "../types";
 
 const createOrder = async ({ user, items, paymentMethod }: any) => {
   const totalAmount = calculateTotal(items);
@@ -76,11 +77,38 @@ const createOrder = async ({ user, items, paymentMethod }: any) => {
   });
 };
 
-const getAllOrders = async (): Promise<Order[]> => {
-  return (await prisma.order.findMany({
-    include: { user: true }
-  }))
-}
+
+
+const getAllOrders = async (
+  page: number = 1,
+  limit: number = 10
+): Promise<PaginatedOrders> => {
+  const skip = (page - 1) * limit;
+
+  const total = await prisma.order.count();
+
+  const data = await prisma.order.findMany({
+    skip,
+    take: limit,
+    include: { user: true },
+    orderBy: { createdAt: "desc" }
+  });
+
+  const totalPages = Math.ceil(total / limit);
+  
+  const meta = {
+    total,
+    page,
+    limit,
+    totalPages
+  };
+  
+
+  return {
+    meta,
+    data
+  };
+};
 
 const getOrderByEmail = async (email: string) => {
 
@@ -98,8 +126,24 @@ const user = await prisma.user.findUnique({
             
 }
 
+const upddateStatus = async (id: string): Promise<Order | null> => {
+
+  const updatedOrder = await prisma.order.update({
+    where: { 
+      id,
+      paymentStatus: PaymentStatus.PAID,
+      orderStatus: OrderStatus.PROCESSING
+
+     },
+    data: { orderStatus:  OrderStatus.SHIPPED},
+  });
+
+  return updatedOrder;
+}
+
 export const OrderService = {
   createOrder,
   getAllOrders,
-  getOrderByEmail
+  getOrderByEmail,
+  upddateStatus
 };

@@ -21,5 +21,9 @@ router.post("/",
     validateRequest(orderValidation.createOrder),
     OrderController.createOrder);
 
+    router.patch("/:id/status",
+    auth(Role.ADMIN),
+    OrderController.upddateStatus);
+
 
 export const OrderRoute = router;

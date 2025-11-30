@@ -41,7 +41,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
         success: true,
         statusCode: 200,
-        message: "Patient login successfully",
+        message: "user login successfully",
         data: {accessToken}
     })
 })

@@ -21,12 +21,13 @@ const createOrder = catchAsync(async (req: Request & {user?:any}, res: Response)
 
 const getAllOrders = catchAsync(async (req: Request, res: Response) => {
   const result = await OrderService.getAllOrders();
-
+  
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Orders retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 
@@ -43,38 +44,25 @@ const getOrderByEmail = catchAsync(async (req: Request & {user?: any}, res: Resp
   });
 });
 
-// const updateOrder = catchAsync(async (req: Request, res: Response) => {
-//   const { orderId } = req.params;
-//   const updatedData = req.body;
+const upddateStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-//   const result = await OrderService.updateOrder(orderId, updatedData);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Order updated successfully',
-//     data: result,
-//   });
-// });
+  const result = await OrderService.upddateStatus(id);
 
-// const deleteOrder = catchAsync(async (req: Request, res: Response) => {
-//   const { orderId } = req.params;
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order updated successfully',
+    data: result,
+  });
+});
 
-//   const result = await OrderService.deleteOrder(orderId);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Order deleted successfully',
-//     data: result,
-//   });
-// });
 
 export const OrderController = {
   createOrder,
   getAllOrders,
   getOrderByEmail,
-//   getOrderById,
-//   updateOrder,
-//   deleteOrder,
+upddateStatus
 };

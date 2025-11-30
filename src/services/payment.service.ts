@@ -1,6 +1,7 @@
 import { prisma } from "../config/prisma";
 import Stripe from "stripe";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
+import { getIO } from "../utils/socket";
 
 const handleStripeWebhooksEvent = async (event: Stripe.Event) => {
   
@@ -8,11 +9,10 @@ const handleStripeWebhooksEvent = async (event: Stripe.Event) => {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const orderId = session.metadata?.orderId;
-      console.log(session, orderId)
-
+      
       if (!orderId) break;
 
-      await prisma.order.update({
+    const order = await prisma.order.update({
         where: { id: orderId },
         data: {
           paymentStatus:
@@ -21,8 +21,20 @@ const handleStripeWebhooksEvent = async (event: Stripe.Event) => {
               : PaymentStatus.FAILED,
           orderStatus: OrderStatus.PROCESSING,
         },
+         include: { user: true },
       });
       console.log(`Order ${orderId} updated from checkout.session.completed`);
+
+      const io = getIO();
+
+      io.to(order.userId).emit("orderUpdate", {
+        orderId,
+        status: order.orderStatus,
+      });
+
+      console.log("Realtime Update Sent ✔");
+
+
       break;
     }
 
@@ -32,12 +44,24 @@ const handleStripeWebhooksEvent = async (event: Stripe.Event) => {
 
       if (!orderId) break;
 
-      await prisma.order.update({
+   const order =  await prisma.order.update({
         where: { id: orderId },
         data: {
           paymentStatus: PaymentStatus.PAID,
         },
+        include: { user: true },
       });
+
+      const io = getIO();
+
+      io.to(order.userId).emit("orderUpdate", {
+        orderId,
+        status: order.orderStatus,
+      });
+
+      console.log("Realtime Update Sent ✔");
+
+
       console.log(`Order ${orderId} updated from payment_intent.succeeded`);
       break;
     }

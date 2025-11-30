@@ -2,50 +2,48 @@ import http, { Server } from "http";
 import app from "./app";
 import dotenv from "dotenv";
 import { prisma } from "./config/prisma";
+import { initSocket } from "./utils/socket";
+import config from "./config";
 
 dotenv.config();
 
 let server: Server | null = null;
 
-
-
-  async function connectDb() {
-     try {
-       await prisma.$connect();
-       console.log("*** database connected succesfull!!")
-     } catch (error) {
-      console.log("*** Db connection failed!!")
-      process.exit(1)
-     }
-  }
-
-
-
-async function startServer() {
+async function connectDb() {
   try {
-    await connectDb();
-    server = http.createServer(app);
-    server.listen(process.env.PORT, () => {
-      console.log(`🚀 Server is running on port ${process.env.PORT}`);
-    });
-
-    handleProcessEvents();
+    await prisma.$connect();
+    console.log("*** database connected succesfull!!");
   } catch (error) {
-    console.error("❌ Error during server startup:", error);
+    console.log("*** Db connection failed!!");
     process.exit(1);
   }
 }
 
-/**
- 
- * @param {string} signal - The termination signal received.
- */
+async function startServer() {
+  try {
+    await connectDb();
+
+    server = http.createServer(app);
+
+    initSocket(server);
+
+    server.listen(config.port, () => {
+      console.log(` Server is running on port ${config.port}`);
+    });
+
+    handleProcessEvents();
+  } catch (error) {
+    console.error("Error during server startup:", error);
+    process.exit(1);
+  }
+}
+
 async function gracefulShutdown(signal: string) {
-  console.warn(`🔄 Received ${signal}, shutting down gracefully...`);
+  console.warn(` Received ${signal}, shutting down gracefully...`);
 
   if (server) {
     server.close(async () => {
-      console.log("✅ HTTP server closed.");
+      console.log(" HTTP server closed.");
 
       try {
         console.log("Server shutdown complete.");
@@ -60,23 +58,19 @@ async function gracefulShutdown(signal: string) {
   }
 }
 
-/**
- * Handle system signals and unexpected errors.
- */
 function handleProcessEvents() {
   process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
   process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 
   process.on("uncaughtException", (error) => {
-    console.error("💥 Uncaught Exception:", error);
+    console.error(" Uncaught Exception:", error);
     gracefulShutdown("uncaughtException");
   });
 
   process.on("unhandledRejection", (reason) => {
-    console.error("💥 Unhandled Rejection:", reason);
+    console.error(" Unhandled Rejection:", reason);
     gracefulShutdown("unhandledRejection");
   });
 }
 
-// Start the application
 startServer();

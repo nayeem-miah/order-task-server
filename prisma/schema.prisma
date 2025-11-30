@@ -22,7 +22,7 @@ model Order {
   id            String        @id @default(uuid())
   user          User          @relation(fields: [userId], references: [id])
   userId        String
-  items         Json          // Array of { title, price, quantity }
+  items         Json     
   totalAmount   Float
   paymentMethod PaymentMethod @default(STRIPE)
   paymentStatus PaymentStatus @default(PENDING)
@@ -43,7 +43,7 @@ model ChatMessage {
   orderId   String?
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
-  role      String   // "user" or "assistant"
+  role      String  
   message   String
   createdAt DateTime @default(now())
 }

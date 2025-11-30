@@ -69,6 +69,21 @@ const getallUsers = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const logout = catchAsync(async (req: Request, res: Response) => {  
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+    });
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "User logged out successfully",
+    });
+})
+
+
 
 export const UserController = {
     registerUser,
@@ -76,4 +91,5 @@ export const UserController = {
     login,
     getSIngleUser,
     getallUsers,
+    logout
 };

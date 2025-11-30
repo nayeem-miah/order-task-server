@@ -1,7 +1,7 @@
 import { Response , Request} from "express";
-import { ChatBotService } from "../services/chatBot.service";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
+import { ChatBotService } from "../services/chatbot.service";
 
 
 

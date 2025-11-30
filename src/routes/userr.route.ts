@@ -18,6 +18,10 @@ router.get("/:id",
      UserController.getSIngleUser
 );
 
+router.post("/logout",
+    UserController.logout
+);
+
 
 
 

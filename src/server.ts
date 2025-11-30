@@ -48,7 +48,7 @@ async function gracefulShutdown(signal: string) {
       try {
         console.log("Server shutdown complete.");
       } catch (error) {
-        console.error("❌ Error during shutdown:", error);
+        console.error(" Error during shutdown:", error);
       }
 
       process.exit(0);

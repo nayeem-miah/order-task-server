@@ -65,7 +65,7 @@ const createProduct = async (payload: ProductPayload[]): Promise<any> => {
 
   const result = await prisma.product.createMany({
     data: payload,
-    skipDuplicates: true, // Optional: skip duplicates if needed
+    skipDuplicates: true, 
   });
 
   return result;

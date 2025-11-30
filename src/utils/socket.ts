@@ -14,7 +14,6 @@ export const initSocket = (server: any) => {
 
   io.use((socket, next) => {
     const token = socket.handshake.query?.token as string;
-    console.log({token})
 
     if (!token) {
       return next(new Error("Authentication failed: No token"));
@@ -34,7 +33,7 @@ export const initSocket = (server: any) => {
 
     socket.join(user.id);
 
-    console.log("User connected:", user.id);
+   
   });
 
   return io;

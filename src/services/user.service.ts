@@ -19,6 +19,7 @@ const registeruser = async(payload: Partial<User>)=>{
         throw new ApiError(HttpStatus.BAD_REQUEST, "User already exists");
     }
 
+
     const hashedPassword = await bcrypt.hash(payload.password as string, Number(config.salt_round));
 
     const result: User = await prisma.user.create({
@@ -30,7 +31,7 @@ const registeruser = async(payload: Partial<User>)=>{
         }
     });
 
-    return result;
+    return payload;
 };
 
 const registerAdmin = async(payload: Partial<User>)=>{
@@ -91,6 +92,7 @@ const getAllUsers = async () => {
     const users = await prisma.user.findMany();
     return users;
 }
+
 
 export const userService = {
     registeruser,

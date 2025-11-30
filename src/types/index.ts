@@ -9,3 +9,15 @@ export interface PaginatedOrders {
     totalPages: number;
   }
 }
+
+
+export interface ProductPayload {
+  title: string;
+  price: number;
+  quantity: number;
+}
+
+export interface ChatPayload {
+  message: string;
+  userId?: string; 
+}

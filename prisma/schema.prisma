@@ -47,6 +47,12 @@ model ChatMessage {
   message   String
   createdAt DateTime @default(now())
 }
+model Product {
+  id       String  @id @default(cuid())
+  title    String
+  price    Float
+  quantity Int
+}
 
 enum PaymentMethod {
   STRIPE
